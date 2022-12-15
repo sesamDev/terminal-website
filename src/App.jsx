@@ -63,6 +63,8 @@ const App = () => {
         onChange={(e) => {
           setInput((prev) => (prev = captureKeystroke(e)));
         }}
+        autoFocus={true}
+        onBlur={({ target }) => target.focus()}
       />
       <div className="lineContainer">
         {prevInput.map((_input, index) => {
