@@ -10,46 +10,26 @@ function captureKeystroke(e) {
 }
 
 function Prompt(props) {
-  const [input, setInput] = useState(() => "");
-  let active = props.active;
   const user = "guest@terminal:~$";
-
-  useEffect(() => {
-    if (active) {
-      setInput(props.input);
-    }
-  }, [props.input]);
-
-  if (props.depth !== 0)
-    return (
-      <>
-        {(active = false)}
-        <p className="promptLine">{`${user} ${input}`}</p>
-        <Prompt active={true} input={props.input} depth={props.depth - 1} />
-      </>
-    );
 
   return (
     <>
-      <p className="promptLine">{`${user} ${input}`}</p>
+      <p className="promptLine">{`${user} ${props.input}`}</p>
     </>
   );
 }
 
 function App() {
   const [input, setInput] = useState(() => "");
+  console.log(input === "");
   const [numberOfLines, setNumberOfLines] = useState(() => 0);
+  const [prevInput, setPrevInput] = useState([]);
+  console.log(prevInput);
 
   function clearConsole() {
-    setInput((prev) => (prev = ""));
-    setNumberOfLines((prev) => (prev = 0));
+    setInput("");
+    setPrevInput([]);
   }
-
-  // function renderLines(numberOfLinesToRender){
-  //   if(numberOfLinesToRender === 0) return
-  //   renderLines(numberOfLinesToRender -1)
-  //   return <Prompt active={true} input={input}/>
-  // }
 
   function evaluateInput() {
     const _commands = commands;
@@ -59,20 +39,16 @@ function App() {
   }
 
   function handleEnterKey(e) {
-    console.log("Key pressed: " + e.key);
     if (e.key !== "Enter") return;
+    input.trim() !== "" ? setPrevInput((prev) => [...prev, input.trim()]) : null;
     if (evaluateInput() === "clear") {
       console.log("Clear console");
       clearConsole();
     }
     const textArea = document.querySelector("textarea");
     textArea.value = "";
-
+    setInput("");
     setNumberOfLines((prev) => ++prev);
-  }
-
-  function test(e) {
-    return console.log(e);
   }
 
   useEffect(() => {
@@ -88,7 +64,12 @@ function App() {
           setInput((prev) => (prev = captureKeystroke(e)));
         }}
       />
-      <Prompt active={true} input={input} depth={numberOfLines} />
+      <div className="lineContainer">
+        {prevInput.map((_input) => {
+          return <Prompt input={_input} />;
+        })}
+        <Prompt input={input} />
+      </div>
     </div>
   );
 }
