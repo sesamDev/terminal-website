@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 
 import About from "./compontents/About";
 import Error from "./compontents/Error";
+import Help from "./compontents/Help";
 import Prompt from "./compontents/Prompt";
 import Weather from "./compontents/Weather";
 import { commands } from "./data/commands";
+import uniqid from "uniqid";
 
 // Captures every keystroke and returns it as a string
 function captureKeystroke(e) {
@@ -26,13 +28,19 @@ const App = () => {
       case "clear":
         return clearConsole();
       case "about":
-        return setTree((prev) => [...prev, <About key={date} />]);
+        return setTree((prev) => [...prev, <Prompt input={command} key={uniqid()} />, <About key={uniqid()} />]);
       case "weather":
-        return setTree((prev) => [...prev, <Weather key={date} />]);
+        return setTree((prev) => [...prev, <Prompt input={command} key={uniqid()} />, <Weather key={uniqid()} />]);
       case "":
-        return setTree((prev) => [...prev, <Prompt input={""} key={date} />]);
+        return setTree((prev) => [...prev, <Prompt input={""} key={uniqid()} />]);
+      case "help":
+        return setTree((prev) => [...prev, <Prompt input={command} key={uniqid()} />, <Help key={uniqid()} />]);
       default: // If command is not found
-        return setTree((prev) => [...prev, <Error command={command} key={date} />]);
+        return setTree((prev) => [
+          ...prev,
+          <Prompt input={command} key={uniqid()} />,
+          <Error command={command} key={uniqid()} />,
+        ]);
     }
   }
 
