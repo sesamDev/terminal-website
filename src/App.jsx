@@ -65,8 +65,8 @@ const App = () => {
         }}
       />
       <div className="lineContainer">
-        {prevInput.map((_input) => {
-          return <Prompt input={_input} />;
+        {prevInput.map((_input, index) => {
+          return <Prompt input={_input} key={index} />;
         })}
         <Prompt input={input} />
       </div>
