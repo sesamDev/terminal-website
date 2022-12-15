@@ -1,1 +1,1 @@
-export const commands = ["clear"];
+export const commands = ["clear", "about", "weather"];

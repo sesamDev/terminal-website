@@ -2,7 +2,10 @@ import "./App.css";
 
 import { useEffect, useState } from "react";
 
+import About from "./compontents/About";
+import Error from "./compontents/Error";
 import Prompt from "./compontents/Prompt";
+import Weather from "./compontents/Weather";
 import { commands } from "./data/commands";
 
 // Captures every keystroke and returns it as a string
@@ -15,32 +18,42 @@ function captureKeystroke(e) {
 const App = () => {
   const [input, setInput] = useState(() => "");
   const [prevInput, setPrevInput] = useState([]);
+  const [tree, setTree] = useState([]);
+
+  function executeInput(command) {
+    const date = new Date();
+    switch (command.toLowerCase()) {
+      case "clear":
+        return clearConsole();
+      case "about":
+        return setTree((prev) => [...prev, <About key={date} />]);
+      case "weather":
+        return setTree((prev) => [...prev, <Weather key={date} />]);
+      case "":
+        return setTree((prev) => [...prev, <Prompt input={""} key={date} />]);
+      default: // If command is not found
+        return setTree((prev) => [...prev, <Error command={command} key={date} />]);
+    }
+  }
 
   // Resets the console to the initial state
   function clearConsole() {
     setInput("");
-    setPrevInput([]);
-  }
-
-  // If input is a available command, return it as a string
-  function evaluateInput() {
-    const _commands = commands;
-    const _input = input.toLocaleLowerCase().trim();
-    return _commands.includes(_input) ? _input : "";
+    setTree([]);
   }
 
   // Handles what happens after enter key has been pressed
   function handleEnterKey(e) {
     if (e.key !== "Enter") return; // Ignore if key isn't enter and return
 
-    // If the users input isn't empty, then save it as a previous input
-    // trim() is to remove newline character from input
-    input.trim() !== "" ? setPrevInput((prev) => [...prev, input.trim()]) : null;
+    // Remove newline character
+    const userInput = input.trim();
 
-    // TODO: Handle more inputs than just clear
-    if (evaluateInput() === "clear") {
-      clearConsole();
-    }
+    // If the users input isn't empty, then save it as a previous input
+    userInput !== "" ? setPrevInput((prev) => [...prev, input.trim()]) : null;
+
+    // Executes input
+    executeInput(userInput);
 
     // Clear the input area
     const textArea = document.querySelector("textarea");
@@ -65,11 +78,10 @@ const App = () => {
         }}
         autoFocus={true}
         onBlur={({ target }) => target.focus()}
+        className="absolute -left-80"
       />
       <div className="lineContainer">
-        {prevInput.map((_input, index) => {
-          return <Prompt input={_input} key={index} />;
-        })}
+        {tree.map((component) => component)}
         <Prompt input={input} />
       </div>
     </div>
