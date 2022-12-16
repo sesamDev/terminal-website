@@ -16,6 +16,14 @@ function captureKeystroke(e) {
   return input;
 }
 
+// Returns input as an array of strings
+// so that an optional argument can be passed to the command
+function userInputToArray(userInput) {
+  return userInput.split(" ").filter((str) => {
+    return /\S/.test(str);
+  });
+}
+
 // Main function
 const App = () => {
   const [input, setInput] = useState(() => "");
@@ -23,23 +31,30 @@ const App = () => {
   const [tree, setTree] = useState([]);
 
   function executeInput(command) {
+    const cmd = command[0];
+    const args = command[1];
+
     const date = new Date();
-    switch (command.toLowerCase()) {
+    switch (cmd.toLowerCase()) {
       case "clear":
         return clearConsole();
       case "about":
-        return setTree((prev) => [...prev, <Prompt input={command} key={uniqid()} />, <About key={uniqid()} />]);
+        return setTree((prev) => [...prev, <Prompt input={cmd} key={uniqid()} />, <About key={uniqid()} />]);
       case "weather":
-        return setTree((prev) => [...prev, <Prompt input={command} key={uniqid()} />, <Weather key={uniqid()} />]);
+        return setTree((prev) => [
+          ...prev,
+          <Prompt input={cmd} key={uniqid()} />,
+          <Weather key={uniqid()} city={args} />,
+        ]);
       case "":
         return setTree((prev) => [...prev, <Prompt input={""} key={uniqid()} />]);
       case "help":
-        return setTree((prev) => [...prev, <Prompt input={command} key={uniqid()} />, <Help key={uniqid()} />]);
+        return setTree((prev) => [...prev, <Prompt input={cmd} key={uniqid()} />, <Help key={uniqid()} />]);
       default: // If command is not found
         return setTree((prev) => [
           ...prev,
-          <Prompt input={command} key={uniqid()} />,
-          <Error command={command} key={uniqid()} />,
+          <Prompt input={cmd} key={uniqid()} />,
+          <Error command={cmd} key={uniqid()} />,
         ]);
     }
   }
@@ -54,14 +69,18 @@ const App = () => {
   function handleEnterKey(e) {
     if (e.key !== "Enter") return; // Ignore if key isn't enter and return
 
-    // Remove newline character
+    // Remove newline character which is present since
+    // we take the input in a textarea element
     const userInput = input.trim();
 
     // If the users input isn't empty, then save it as a previous input
     userInput !== "" ? setPrevInput((prev) => [...prev, input.trim()]) : null;
 
+    // Turn input into an array so that we can check for
+    // optional argument to the command
+    const inputAsArray = userInputToArray(userInput);
     // Executes input
-    executeInput(userInput);
+    executeInput(inputAsArray);
 
     // Clear the input area
     const textArea = document.querySelector("textarea");
