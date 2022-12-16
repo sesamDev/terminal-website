@@ -1,12 +1,12 @@
 import React from "react";
-import { commands } from "../data/commands";
 
 const Help = () => {
   return (
     <>
-      {commands.map((command) => (
-        <p key={command}>{command}</p>
-      ))}
+      <pre>{"help              Show available commands"}</pre>
+      <pre>{"weather <city>    Show weather, only supports single word citys at the moment"}</pre>
+      <pre>{"about             What is this site?"}</pre>
+      <pre>{"clear             Clear screen"}</pre>
     </>
   );
 };
