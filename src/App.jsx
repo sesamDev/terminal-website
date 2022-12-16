@@ -31,11 +31,11 @@ const App = () => {
   const [tree, setTree] = useState([]);
 
   function executeInput(command) {
-    const cmd = command[0];
+    let cmd = command[0];
     const args = command[1];
 
     const date = new Date();
-    switch (cmd.toLowerCase()) {
+    switch (command.length === 0 ? (cmd = "") : cmd.toLowerCase()) {
       case "clear":
         return clearConsole();
       case "about":
@@ -79,6 +79,7 @@ const App = () => {
     // Turn input into an array so that we can check for
     // optional argument to the command
     const inputAsArray = userInputToArray(userInput);
+    console.log(inputAsArray);
     // Executes input
     executeInput(inputAsArray);
 
@@ -109,7 +110,7 @@ const App = () => {
       />
       <div className="lineContainer">
         {tree.map((component) => component)}
-        <Prompt input={input} />
+        <Prompt className="mainInput" input={input} />
       </div>
     </div>
   );
