@@ -1,10 +1,10 @@
 import './App.css'
-import Github from './compontents/Github'
 import { useEffect, useState } from 'react'
 
 import About from './compontents/About'
 import Error from './compontents/Error'
 import Help from './compontents/Help'
+import Github from './compontents/Github'
 import Prompt from './compontents/Prompt'
 import Weather from './compontents/Weather'
 import uniqid from 'uniqid'

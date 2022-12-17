@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Help = () => {
   return (
     <>
@@ -11,7 +9,7 @@ const Help = () => {
       </pre>
       <pre>{'about             What is this site?'}</pre>
       <pre>{'clear             Clear screen'}</pre>
-      <pre>{'github            Redirects to my github repo'}</pre>
+      <pre>{'github            Open a new tab with the repo of this site'}</pre>
     </>
   )
 }
