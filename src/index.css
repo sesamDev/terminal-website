@@ -20,3 +20,7 @@ body {
   font: 1.3rem Inconsolata, monospace;
   text-shadow: 0 0 2px var(--main-font-color), 0 0 5px var(--main-font-color);
 }
+
+pre {
+  font: 1.3rem Inconsolata, monospace;
+}
